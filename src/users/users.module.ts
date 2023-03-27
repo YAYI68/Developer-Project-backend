@@ -1,11 +1,10 @@
 import { CurrentUserInterceptor } from './interceptors/current-user.interceptor';
 import { JwtStrategy } from './strategies/jwt.strategy';
-import { UserProfile, UserSkill } from './entities/user-profile';
 import { Module } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from './entities/user.entity';
+import { User,UserSkill } from './entities/user.entity';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { PassportModule } from '@nestjs/passport';
@@ -18,7 +17,7 @@ import { RolesGuard } from './guard/user-roles.guard';
 
 
 @Module({
-  imports:[TypeOrmModule.forFeature([User,UserProfile,UserSkill]),
+  imports:[TypeOrmModule.forFeature([User,UserSkill]),
   // PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
       // useFactory: () => ({

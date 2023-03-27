@@ -1,15 +1,15 @@
-import { Injectable } from '@nestjs/common';
-import { CreateUserDto, UserProfileDto } from './dto/create-user.dto';
+import { Injectable, BadRequestException } from '@nestjs/common';
+import { CreateUserDto, UpdateUserProfileDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
-import { UserProfile } from './entities/user-profile';
+import { UnauthorizedException,NotFoundException } from '@nestjs/common/exceptions';
 
 @Injectable()
 export class UsersService {
   constructor(@InjectRepository(User) private readonly userRepo:Repository<User>,
-              @InjectRepository(UserProfile) private readonly userProfileRepo:Repository<UserProfile>,
+             
        ){}
 
   async findAll() {
@@ -20,26 +20,40 @@ export class UsersService {
   async findOne(id: string) {
     const user = await this.userRepo.findOne({
       where:{id:id},
-      relations:{
-        profile:true
-      }
     }) 
     return user;
   }
   
+  async userprofile(userId:string,userProfileDto:UpdateUserDto){
+     console.log({userProfileDto})
+     const user =  await this.userRepo.findOne({where:{id:userId}})
+    if(user){
+       try{
+         const user = await this.userRepo.update({id:userId},userProfileDto);
+         return user
+       }
+       catch(err){
+          throw new BadRequestException()
+       }
+    }
+    else{
+      throw new NotFoundException("user does not exist")
+    }
+  }
   
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+
+  async remove(userId: string) {
+     const user = await this.userRepo.findOne({where:{id:userId}})
+     if(user){
+      console.log({user})
+      await this.userRepo.delete({id:userId})
+      return { message: "User Removed Successfully"}
+     }
+     else{
+      throw new NotFoundException("user does not exist")
+     }
+  
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
-  }
 
-userprofile(userProfileDto:UserProfileDto){
-  const user =  this.userProfileRepo.create({
-    ...userProfileDto
-   })
-   return this.userProfileRepo.save(user);
-}
 }

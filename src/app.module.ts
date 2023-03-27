@@ -1,9 +1,9 @@
-import { UserProfile, UserSkill } from './users/entities/user-profile';
+
 import { AppService } from './app.service';
 import { Module } from '@nestjs/common';
 import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from './users/entities/user.entity';
+import { User,UserSkill } from './users/entities/user.entity';
 import { AppController } from './app.controller';
 
 @Module({
@@ -14,7 +14,7 @@ import { AppController } from './app.controller';
     port: 3306,
     username: "root",
     password: "103288",
-    entities:[User,UserProfile,UserSkill],
+    entities:[User,UserSkill],
     synchronize:true,
   }),
   UsersModule,

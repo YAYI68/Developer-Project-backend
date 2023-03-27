@@ -1,6 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn } from "typeorm"
-import { UserRole } from "../enum/user-roles.enum"
-import { UserProfile } from "./user-profile"
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, OneToMany, ManyToOne } from "typeorm"
+import { UserRole } from "../enum/user-roles.enum";
 
 
 
@@ -26,9 +25,43 @@ export class User {
     @Column()
     password:string; 
 
-    @OneToOne(() => UserProfile)
-    @JoinColumn()
-    profile: UserProfile
+    @Column({default:'default.jpg'})
+    image:string;
+
+    @Column({nullable:true})
+    github:string;
+
+    @Column({nullable:true})
+    linkenIn:string
+    
+    @Column({nullable:true})
+    twitter:string;
+
+    @Column({nullable:true})
+    short_bio:string
+
+    @Column({nullable:true})
+    portfolio_url:string
+
+    @OneToMany(() => UserSkill, (skill) => skill.user)
+    skills: UserSkill[]
+
+
+}
+
+@Entity()
+export class UserSkill {
+    @PrimaryGeneratedColumn('uuid')
+    id:string;
+
+    @Column()
+    name:string;
+
+    @Column()
+    description:string;
+    
+    @ManyToOne(() =>User, (user) => user.skills)
+    user: User
 }
 
 

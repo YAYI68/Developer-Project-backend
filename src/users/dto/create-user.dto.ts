@@ -33,16 +33,19 @@ export class LoginUserDto {
   
 }
 
-export class UserProfileDto {
-       
-  @IsOptional()
-  @IsString()
-  image:string;
+export class UpdateUserProfileDto {
   
-    
-  @IsOptional()
   @IsString()
+  @IsOptional()
+  username: string;
+
+  @IsString()
+  @IsOptional()
   github:string;
+
+  @IsString()
+  @IsOptional()
+  image:string;
   
   @IsOptional()
   @IsString()

@@ -1,3 +1,4 @@
+import { ChangePasswordDto } from './dto/user-password.dto';
 import { JwtPayload } from './interfaces/jwt.interface';
 
 import { BadRequestException, ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
@@ -31,8 +32,8 @@ export class AuthService {
             ...createUserDto,
             password: hashpassword
         })
-        const currenUser =  await this.userRepository.save(user)
-        const payload:JwtPayload = {userId:currenUser.id,role:currenUser.role} 
+        const currentUser =  await this.userRepository.save(user)
+        const payload:JwtPayload = {userId:currentUser.id,role:currentUser.role} 
         
           const  token = await this.getTokens(payload)
         return token;
@@ -66,6 +67,18 @@ export class AuthService {
         }
         throw new BadRequestException('invalid email/password')
         
+    }
+    async ChangePassword (userId:string,password:string){
+        try{
+            const hashpassword = await this.hashData(password)
+             await this.userRepository.update({id:userId},{password:hashpassword})
+             return { message : 'Password updated successfully'}
+
+        }
+        catch(err){
+            throw new BadRequestException()
+        }
+      
     }
 
     async refreshToken(userId:string,refresh:string){

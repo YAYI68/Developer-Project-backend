@@ -8,6 +8,8 @@ import { RefreshToken } from './decorators/refresh-token.decorator';
 import { CurrentUser } from './decorators/current-user.decorator';
 import { JwtRefreshAuthGuard } from './guard/jwt-refresh.guard';
 import { SessionToken } from './decorators/session-token.decorator';
+import { ChangePasswordDto } from './dto/user-password.dto';
+import { CurrentUserInterface } from './interfaces/current-user.interface';
 
 @Controller('auth')
 export class AuthController {
@@ -37,6 +39,14 @@ export class AuthController {
         const token = await this.authService.refreshToken(user.userId,refresh_token)
         session.refresh_token = token.refreshToken
         return token
+    }
+    
+    @UseGuards(JwtAuthGuard)
+    @Post('/change_password')
+     change_password(@CurrentUser() user:CurrentUserInterface,@Body() changepassword:ChangePasswordDto) {
+        const { password } = changepassword
+        const { userId } = user
+        return this.authService.ChangePassword(userId,password)     
     }
 
 }
