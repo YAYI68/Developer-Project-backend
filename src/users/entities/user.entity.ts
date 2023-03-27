@@ -22,10 +22,10 @@ export class User {
     })
     role:UserRole
      
-    @Column()
+    @Column({select:false})
     password:string; 
 
-    @Column({default:'default.jpg'})
+    @Column({default:'default.jpg',nullable:true})
     image:string;
 
     @Column({nullable:true})
@@ -54,7 +54,7 @@ export class UserSkill {
     @PrimaryGeneratedColumn('uuid')
     id:string;
 
-    @Column()
+    @Column({unique: true })
     name:string;
 
     @Column()

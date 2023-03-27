@@ -54,7 +54,13 @@ export class AuthService {
 
    async signin(loginUser:LoginUserDto){
         const { email , password } = loginUser
-        const user = await this.userRepository.findOne({where:{email}})
+        const user = await this.userRepository.findOne({where:{email},
+         select:{
+            id:true,
+            password:true,
+            role:true
+         }
+        })
         if(!user){
             throw new BadRequestException('invalid email/password')
         }
@@ -83,7 +89,13 @@ export class AuthService {
 
     async refreshToken(userId:string,refresh:string){
         if(userId && refresh){
-                const user = await this.userRepository.findOne({where: {id:userId}});
+                  const user = await this.userRepository.findOne({where:{id:userId},
+                    select:{
+                       id:true,
+                       role:true,
+                       password:true,
+                    }
+                   })
                 const { id,role } = user
                 const payload:JwtPayload ={userId:id,role} 
                 const  token = await this.getTokens(payload)
@@ -94,12 +106,6 @@ export class AuthService {
         }  
     }
     
-    // async updateRefreshToken(userId: string, refreshToken: string) {
-    //     const hashedRefreshToken = await this.hashData(refreshToken);
-    //     await this.userRepository.update(userId, {
-    //       refreshToken:hashedRefreshToken 
-    //     });
-    //   }
     private async  getTokens (payload:JwtPayload){
         const [ accessToken,refreshToken] = await Promise.all([
             this.jwtService.signAsync(payload,{

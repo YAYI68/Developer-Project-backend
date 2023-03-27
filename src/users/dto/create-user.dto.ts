@@ -1,5 +1,6 @@
 
-import { IsEmail,IsString,MinLength,MaxLength,Matches, IsEnum, IsOptional } from 'class-validator';
+import { Exclude } from 'class-transformer';
+import { IsEmail,IsString,MinLength,MaxLength,Matches, IsOptional } from 'class-validator';
 import { User } from '../entities/user.entity';
 export class CreateUserDto {
     
@@ -12,13 +13,14 @@ export class CreateUserDto {
     @IsEmail()
     email: string;    
     
+  
   @IsString()
   @MinLength(8)
   @MaxLength(32)
   @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, {
     message: 'password must contain at least Capital letters,lowercase letters,numbers and symbols',
-  })
-    password: string;
+  }) 
+  password: string;
     
 }
 

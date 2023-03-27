@@ -1,14 +1,17 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable, BadRequestException, ConflictException } from '@nestjs/common';
 import { CreateUserDto, UpdateUserProfileDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from './entities/user.entity';
+import { User, UserSkill } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { UnauthorizedException,NotFoundException } from '@nestjs/common/exceptions';
+import { UserSkillDto } from './dto/user-skill.dto';
+
 
 @Injectable()
 export class UsersService {
   constructor(@InjectRepository(User) private readonly userRepo:Repository<User>,
+            @InjectRepository(UserSkill) private readonly userSkillRepo:Repository<UserSkill>,
              
        ){}
 
@@ -19,7 +22,10 @@ export class UsersService {
 
   async findOne(id: string) {
     const user = await this.userRepo.findOne({
-      where:{id:id},
+      where:{id:id},  
+      relations:{
+        skills:true,
+      }
     }) 
     return user;
   }
@@ -52,8 +58,33 @@ export class UsersService {
      else{
       throw new NotFoundException("user does not exist")
      }
-  
   }
 
+  async addSkill(userId:string,userskill:UserSkillDto){
+      const { name } = userskill
+      const existSkill = await this.userSkillRepo.findOne({where:{name:name}})
+      if(!existSkill ){
+        try{
+      
+          const user = await this.userRepo.findOne({where:{id:userId}})
+          if(user){
+              const skill =  this.userSkillRepo.create({
+                ...userskill,
+                user: user
+               })
 
+               return this.userSkillRepo.save(skill)
+          }
+          else{
+          throw new  NotFoundException()
+          }
+     }
+     catch(err){
+      throw new BadRequestException()
+     }
+      }
+      else{
+        throw new ConflictException('Skill already exists');
+      }  
+  }
 }

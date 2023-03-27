@@ -4,13 +4,14 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Unauthori
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Serialize } from 'src/interceptors/serialize.interceptor';
-import { UserDto, UserProfileDto } from './dto/user.dto';
+import { UserDto, UserPasswordDto, UserProfileDto } from './dto/user.dto';
 import { JwtAuthGuard } from './guard/jwt-auth.guard';
 import { CurrentUser } from './decorators/current-user.decorator';
 import { User } from './entities/user.entity';
 import { Roles } from './decorators/user-role.decorator';
 import { UserRole } from './enum/user-roles.enum';
 import { RolesGuard } from './guard/user-roles.guard';
+import { UserSkillDto } from './dto/user-skill.dto';
 
 
 
@@ -29,7 +30,7 @@ export class UsersController {
     return this.usersService.findAll();
   }
   
-  @Serialize(UserProfileDto)
+  // @Serialize(UserPasswordDto)
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.usersService.findOne(id);
@@ -48,15 +49,23 @@ export class UsersController {
     }
     
   }
-
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-  //   return this.usersService.update(id, updateUserDto);
-  // }
   @UseGuards(JwtAuthGuard)
   @Delete('/account')
   remove( @CurrentUser() user:CurrentUserInterface) {
     return this.usersService.remove(user.userId);
+  }
+  
+  @UseGuards(JwtAuthGuard)
+  @Post('/skill')
+  add_skill(@CurrentUser() user:CurrentUserInterface, @Body() userskill:UserSkillDto){
+     const { userId } = user
+     if(userId ){
+        return this.usersService.addSkill(userId, userskill)
+     }
+     else{
+        throw new UnauthorizedException();
+     }
+     
   }
   
  

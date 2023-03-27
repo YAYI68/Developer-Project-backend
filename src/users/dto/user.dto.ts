@@ -1,5 +1,7 @@
 
 import { Exclude, Expose } from 'class-transformer'
+import { ValidateNested } from 'class-validator';
+import { UserSkill } from '../entities/user.entity';
 
 
 export class UserDto {
@@ -13,6 +15,19 @@ export class UserDto {
     role: string;
  
   }
+
+  export class UserSkillReturnDto {
+    
+    @Expose()
+    id: string;
+
+    @Expose()
+    name: string;
+
+    @Expose()
+    description: string;
+
+}
 
 
   export class UserProfileDto extends UserDto {
@@ -36,4 +51,14 @@ export class UserDto {
       
     @Expose()
     portfolio_url:string
+     
+    // @Expose()
+    // @ValidateNested({ each: true })
+    // skills:UserSkillReturnDto[]  
   }
+
+  export class UserPasswordDto {
+    @Exclude()
+    password: string;
+  }
+
