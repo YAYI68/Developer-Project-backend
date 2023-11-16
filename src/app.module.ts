@@ -15,7 +15,7 @@ import { ConfigModule } from '@nestjs/config';
       type: 'sqlite',
       database: 'db.sqlite',
       entities: [User, UserSkill],
-      synchronize: true,
+      synchronize: process.env.NODE_ENV !== 'production',
     }),
     UsersModule,
   ],

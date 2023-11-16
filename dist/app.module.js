@@ -26,7 +26,7 @@ AppModule = __decorate([
                 type: 'sqlite',
                 database: 'db.sqlite',
                 entities: [user_entity_1.User, user_entity_1.UserSkill],
-                synchronize: true,
+                synchronize: process.env.NODE_ENV !== 'production',
             }),
             users_module_1.UsersModule,
         ],
