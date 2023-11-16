@@ -14,26 +14,32 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthService = void 0;
 const common_1 = require("@nestjs/common");
-const typeorm_1 = require("@nestjs/typeorm");
-const typeorm_2 = require("typeorm");
+const typeorm_1 = require("typeorm");
 const bcrypt = require("bcrypt");
 const user_entity_1 = require("./entities/user.entity");
 const jwt_1 = require("@nestjs/jwt");
 const jwt_constant_1 = require("./contants/jwt-constant");
+const typeorm_2 = require("@nestjs/typeorm");
+typeorm_2.InjectRepository;
 let AuthService = class AuthService {
     constructor(userRepository, jwtService) {
         this.userRepository = userRepository;
         this.jwtService = jwtService;
     }
     async create(createUserDto) {
-        const existUser = await this.userRepository.findOne({ where: { email: createUserDto.email } });
+        const existUser = await this.userRepository.findOne({
+            where: { email: createUserDto.email },
+        });
         if (existUser) {
             throw new common_1.ConflictException('Email already exists');
         }
         const hashpassword = await this.hashData(createUserDto.password);
         const user = this.userRepository.create(Object.assign(Object.assign({}, createUserDto), { password: hashpassword }));
         const currentUser = await this.userRepository.save(user);
-        const payload = { userId: currentUser.id, role: currentUser.role };
+        const payload = {
+            userId: currentUser.id,
+            role: currentUser.role,
+        };
         const token = await this.getTokens(payload);
         return token;
     }
@@ -48,12 +54,13 @@ let AuthService = class AuthService {
     }
     async signin(loginUser) {
         const { email, password } = loginUser;
-        const user = await this.userRepository.findOne({ where: { email },
+        const user = await this.userRepository.findOne({
+            where: { email },
             select: {
                 id: true,
                 password: true,
-                role: true
-            }
+                role: true,
+            },
         });
         if (!user) {
             throw new common_1.BadRequestException('invalid email/password');
@@ -79,12 +86,13 @@ let AuthService = class AuthService {
     }
     async refreshToken(userId, refresh) {
         if (userId && refresh) {
-            const user = await this.userRepository.findOne({ where: { id: userId },
+            const user = await this.userRepository.findOne({
+                where: { id: userId },
                 select: {
                     id: true,
                     role: true,
                     password: true,
-                }
+                },
             });
             const { id, role } = user;
             const payload = { userId: id, role };
@@ -99,20 +107,20 @@ let AuthService = class AuthService {
         const [accessToken, refreshToken] = await Promise.all([
             this.jwtService.signAsync(payload, {
                 secret: jwt_constant_1.jwtConstants.secret,
-                expiresIn: '5m'
+                expiresIn: '5m',
             }),
             this.jwtService.signAsync(payload, {
                 secret: jwt_constant_1.jwtConstants.secret,
-                expiresIn: '7d'
-            })
+                expiresIn: '7d',
+            }),
         ]);
         return { accessToken, refreshToken };
     }
 };
 AuthService = __decorate([
     (0, common_1.Injectable)(),
-    __param(0, (0, typeorm_1.InjectRepository)(user_entity_1.User)),
-    __metadata("design:paramtypes", [typeorm_2.Repository,
+    __param(0, (0, typeorm_2.InjectRepository)(user_entity_1.User)),
+    __metadata("design:paramtypes", [typeorm_1.Repository,
         jwt_1.JwtService])
 ], AuthService);
 exports.AuthService = AuthService;

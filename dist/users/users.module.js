@@ -24,22 +24,25 @@ let UsersModule = class UsersModule {
 };
 UsersModule = __decorate([
     (0, common_1.Module)({
-        imports: [typeorm_1.TypeOrmModule.forFeature([user_entity_1.User, user_entity_1.UserSkill]),
+        imports: [
+            typeorm_1.TypeOrmModule.forFeature([user_entity_1.User, user_entity_1.UserSkill]),
             jwt_1.JwtModule.register({}),
         ],
         controllers: [users_controller_1.UsersController, auth_controller_1.AuthController],
-        providers: [users_service_1.UsersService, auth_service_1.AuthService,
+        providers: [
+            users_service_1.UsersService,
+            auth_service_1.AuthService,
             jwt_strategy_1.JwtStrategy,
             jwt_refresh_strategy_1.JwtRefreshStrategy,
             {
                 provide: core_1.APP_INTERCEPTOR,
-                useClass: current_user_interceptor_1.CurrentUserInterceptor
+                useClass: current_user_interceptor_1.CurrentUserInterceptor,
             },
             {
                 provide: core_1.APP_GUARD,
-                useClass: user_roles_guard_1.RolesGuard
-            }
-        ]
+                useClass: user_roles_guard_1.RolesGuard,
+            },
+        ],
     })
 ], UsersModule);
 exports.UsersModule = UsersModule;

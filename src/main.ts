@@ -7,7 +7,9 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
   app.use(helmet());
+  app.setGlobalPrefix('/api/v1');
   app.use(
     session({
       secret: process.env.jwtsecret,
@@ -21,6 +23,6 @@ async function bootstrap() {
       transform: true,
     }),
   );
-  await app.listen(process.env.PORT || 3000);
+  await app.listen(parseInt(process.env.PORT) || 3000);
 }
 bootstrap();

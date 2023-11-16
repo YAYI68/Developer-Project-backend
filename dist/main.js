@@ -8,6 +8,7 @@ const app_module_1 = require("./app.module");
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
     app.use((0, helmet_1.default)());
+    app.setGlobalPrefix('/api/v1');
     app.use(session({
         secret: process.env.jwtsecret,
         resave: false,
@@ -17,7 +18,7 @@ async function bootstrap() {
         whitelist: true,
         transform: true,
     }));
-    await app.listen(process.env.PORT || 3000);
+    await app.listen(parseInt(process.env.PORT) || 3000);
 }
 bootstrap();
 //# sourceMappingURL=main.js.map

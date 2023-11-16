@@ -11,6 +11,7 @@ const app_service_1 = require("./app.service");
 const common_1 = require("@nestjs/common");
 const users_module_1 = require("./users/users.module");
 const typeorm_1 = require("@nestjs/typeorm");
+const user_entity_1 = require("./users/entities/user.entity");
 const app_controller_1 = require("./app.controller");
 const config_1 = require("@nestjs/config");
 let AppModule = class AppModule {
@@ -22,22 +23,10 @@ AppModule = __decorate([
                 isGlobal: true,
             }),
             typeorm_1.TypeOrmModule.forRoot({
-                type: 'postgres',
-                database: process.env.DB_DATABASE,
-                host: process.env.DB_HOST,
-                port: Number(process.env.DB_PORT),
-                username: process.env.DB_USER,
-                password: process.env.DB_PASSWORD,
-                entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-                synchronize: process.env.NODE_ENV !== 'production',
-                ssl: process.env.DB_SSL === 'true',
-                extra: {
-                    ssl: process.env.DB_SSL === 'true'
-                        ? {
-                            rejectUnauthorized: false,
-                        }
-                        : null,
-                },
+                type: 'sqlite',
+                database: 'db.sqlite',
+                entities: [user_entity_1.User, user_entity_1.UserSkill],
+                synchronize: true,
             }),
             users_module_1.UsersModule,
         ],

@@ -14,10 +14,11 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UsersService = void 0;
 const common_1 = require("@nestjs/common");
-const typeorm_1 = require("@nestjs/typeorm");
 const user_entity_1 = require("./entities/user.entity");
-const typeorm_2 = require("typeorm");
+const typeorm_1 = require("typeorm");
 const exceptions_1 = require("@nestjs/common/exceptions");
+const typeorm_2 = require("@nestjs/typeorm");
+typeorm_2.InjectRepository;
 let UsersService = class UsersService {
     constructor(userRepo, userSkillRepo) {
         this.userRepo = userRepo;
@@ -32,40 +33,42 @@ let UsersService = class UsersService {
             where: { id: id },
             relations: {
                 skills: true,
-            }
+            },
         });
         return user;
     }
     async userprofile(userId, userProfileDto) {
-        console.log({ userProfileDto });
         const user = await this.userRepo.findOne({ where: { id: userId } });
         if (user) {
             try {
-                const user = await this.userRepo.update({ id: userId }, userProfileDto);
-                return user;
+                const update = await this.userRepo.update({ id: userId }, userProfileDto);
+                if (update.affected > 0) {
+                    return { message: 'User Profile update Successfully' };
+                }
             }
             catch (err) {
                 throw new common_1.BadRequestException();
             }
         }
         else {
-            throw new exceptions_1.NotFoundException("user does not exist");
+            throw new exceptions_1.NotFoundException('user does not exist');
         }
     }
     async remove(userId) {
         const user = await this.userRepo.findOne({ where: { id: userId } });
         if (user) {
-            console.log({ user });
             await this.userRepo.delete({ id: userId });
-            return { message: "User Removed Successfully" };
+            return { message: 'User Removed Successfully' };
         }
         else {
-            throw new exceptions_1.NotFoundException("user does not exist");
+            throw new exceptions_1.NotFoundException('user does not exist');
         }
     }
     async addSkill(userId, userskill) {
         const { name } = userskill;
-        const existSkill = await this.userSkillRepo.findOne({ where: { name: name } });
+        const existSkill = await this.userSkillRepo.findOne({
+            where: { name: name },
+        });
         if (!existSkill) {
             try {
                 const user = await this.userRepo.findOne({ where: { id: userId } });
@@ -88,10 +91,10 @@ let UsersService = class UsersService {
 };
 UsersService = __decorate([
     (0, common_1.Injectable)(),
-    __param(0, (0, typeorm_1.InjectRepository)(user_entity_1.User)),
-    __param(1, (0, typeorm_1.InjectRepository)(user_entity_1.UserSkill)),
-    __metadata("design:paramtypes", [typeorm_2.Repository,
-        typeorm_2.Repository])
+    __param(0, (0, typeorm_2.InjectRepository)(user_entity_1.User)),
+    __param(1, (0, typeorm_2.InjectRepository)(user_entity_1.UserSkill)),
+    __metadata("design:paramtypes", [typeorm_1.Repository,
+        typeorm_1.Repository])
 ], UsersService);
 exports.UsersService = UsersService;
 //# sourceMappingURL=users.service.js.map

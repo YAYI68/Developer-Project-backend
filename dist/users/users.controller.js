@@ -16,13 +16,8 @@ exports.UsersController = void 0;
 const common_1 = require("@nestjs/common");
 const users_service_1 = require("./users.service");
 const update_user_dto_1 = require("./dto/update-user.dto");
-const serialize_interceptor_1 = require("../interceptors/serialize.interceptor");
-const user_dto_1 = require("./dto/user.dto");
 const jwt_auth_guard_1 = require("./guard/jwt-auth.guard");
 const current_user_decorator_1 = require("./decorators/current-user.decorator");
-const user_role_decorator_1 = require("./decorators/user-role.decorator");
-const user_roles_enum_1 = require("./enum/user-roles.enum");
-const user_roles_guard_1 = require("./guard/user-roles.guard");
 const user_skill_dto_1 = require("./dto/user-skill.dto");
 let UsersController = class UsersController {
     constructor(usersService) {
@@ -35,7 +30,6 @@ let UsersController = class UsersController {
         return this.usersService.findOne(id);
     }
     account(user, userProfileDto) {
-        console.log({ userNew: userProfileDto });
         const { userId } = user;
         if (userId) {
             return this.usersService.userprofile(userId, userProfileDto);
@@ -58,9 +52,6 @@ let UsersController = class UsersController {
     }
 };
 __decorate([
-    (0, serialize_interceptor_1.Serialize)(user_dto_1.UserDto),
-    (0, user_role_decorator_1.Roles)(user_roles_enum_1.UserRole.ADMIN),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, user_roles_guard_1.RolesGuard),
     (0, common_1.Get)(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
@@ -75,7 +66,7 @@ __decorate([
 ], UsersController.prototype, "findOne", null);
 __decorate([
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
-    (0, common_1.Patch)("/account"),
+    (0, common_1.Patch)('/account'),
     __param(0, (0, current_user_decorator_1.CurrentUser)()),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),

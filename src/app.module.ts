@@ -2,6 +2,7 @@ import { AppService } from './app.service';
 import { Module } from '@nestjs/common';
 import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { User, UserSkill } from './users/entities/user.entity';
 import { AppController } from './app.controller';
 import { ConfigModule } from '@nestjs/config';
 
@@ -11,23 +12,10 @@ import { ConfigModule } from '@nestjs/config';
       isGlobal: true,
     }),
     TypeOrmModule.forRoot({
-      type: 'postgres',
-      database: process.env.DB_DATABASE,
-      host: process.env.DB_HOST,
-      port: Number(process.env.DB_PORT),
-      username: process.env.DB_USER,
-      password: process.env.DB_PASSWORD,
-      entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-      synchronize: process.env.NODE_ENV !== 'production',
-      ssl: process.env.DB_SSL === 'true',
-      extra: {
-        ssl:
-          process.env.DB_SSL === 'true'
-            ? {
-                rejectUnauthorized: false,
-              }
-            : null,
-      },
+      type: 'sqlite',
+      database: 'db.sqlite',
+      entities: [User, UserSkill],
+      synchronize: true,
     }),
     UsersModule,
   ],

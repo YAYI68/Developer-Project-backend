@@ -1,9 +1,8 @@
-import { UserRole } from "../enum/user-roles.enum";
 export declare class User {
     id: string;
     username: string;
     email: string;
-    role: UserRole;
+    role: string;
     password: string;
     image: string;
     github: string;

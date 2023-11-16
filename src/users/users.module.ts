@@ -4,21 +4,19 @@ import { Module } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User,UserSkill } from './entities/user.entity';
+import { User, UserSkill } from './entities/user.entity';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
-import { PassportModule } from '@nestjs/passport';
+// import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
-import { jwtConstants } from './contants/jwt-constant';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { JwtRefreshStrategy } from './strategies/jwt-refresh.strategy';
 import { RolesGuard } from './guard/user-roles.guard';
 
-
-
 @Module({
-  imports:[TypeOrmModule.forFeature([User,UserSkill]),
-  // PassportModule.register({ defaultStrategy: 'jwt' }),
+  imports: [
+    TypeOrmModule.forFeature([User, UserSkill]),
+    // PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
       // useFactory: () => ({
       //   secret: jwtConstants.secret,
@@ -29,17 +27,19 @@ import { RolesGuard } from './guard/user-roles.guard';
     }),
   ],
   controllers: [UsersController, AuthController],
-  providers: [UsersService, AuthService,
-               JwtStrategy,
-               JwtRefreshStrategy,
+  providers: [
+    UsersService,
+    AuthService,
+    JwtStrategy,
+    JwtRefreshStrategy,
     {
-      provide:APP_INTERCEPTOR,
-      useClass:CurrentUserInterceptor
+      provide: APP_INTERCEPTOR,
+      useClass: CurrentUserInterceptor,
     },
     {
-      provide:APP_GUARD,
-      useClass:RolesGuard
-    }
-  ]
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
+  ],
 })
 export class UsersModule {}

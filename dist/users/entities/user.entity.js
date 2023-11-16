@@ -27,11 +27,7 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "email", void 0);
 __decorate([
-    (0, typeorm_1.Column)({
-        type: "enum",
-        enum: user_roles_enum_1.UserRole,
-        default: user_roles_enum_1.UserRole.MEMBER,
-    }),
+    (0, typeorm_1.Column)({ default: user_roles_enum_1.UserRole.MEMBER }),
     __metadata("design:type", String)
 ], User.prototype, "role", void 0);
 __decorate([
