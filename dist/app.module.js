@@ -30,6 +30,14 @@ AppModule = __decorate([
                 password: process.env.DB_PASSWORD,
                 entities: [__dirname + '/../**/*.entity{.ts,.js}'],
                 synchronize: process.env.NODE_ENV !== 'production',
+                ssl: process.env.DB_SSL === 'true',
+                extra: {
+                    ssl: process.env.DB_SSL === 'true'
+                        ? {
+                            rejectUnauthorized: false,
+                        }
+                        : null,
+                },
             }),
             users_module_1.UsersModule,
         ],

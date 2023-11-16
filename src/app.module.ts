@@ -19,6 +19,15 @@ import { ConfigModule } from '@nestjs/config';
       password: process.env.DB_PASSWORD,
       entities: [__dirname + '/../**/*.entity{.ts,.js}'],
       synchronize: process.env.NODE_ENV !== 'production',
+      ssl: process.env.DB_SSL === 'true',
+      extra: {
+        ssl:
+          process.env.DB_SSL === 'true'
+            ? {
+                rejectUnauthorized: false,
+              }
+            : null,
+      },
     }),
     UsersModule,
   ],
