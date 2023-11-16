@@ -1,0 +1,1 @@
+{"version":3,"file":"session-token.decorator.js","sourceRoot":"","sources":["../../../src/users/decorators/session-token.decorator.ts"],"names":[],"mappings":";;;AAAA,0DAAiE;AAGnD,QAAA,YAAY,GAAG,IAAA,iCAAoB,EAC7C,CAAC,IAAU,EAAC,OAAwB,EAAC,EAAE;IACnC,MAAM,OAAO,GAAG,OAAO,CAAC,YAAY,EAAE,CAAC,UAAU,EAAE,CAAA;IACnD,OAAO,OAAO,CAAC,OAAO,CAAC,aAAa,CAAA;AACxC,CAAC,CACJ,CAAA"}
